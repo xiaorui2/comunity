@@ -31,22 +31,22 @@ public class SensitiveFilter {
 
     @PostConstruct
     public void init() {
-//        this.addKeyword("赌博");
-//        this.addKeyword("嫖娼");
-//        this.addKeyword("吸毒");
-//        this.addKeyword("开票");
-        try (
-                InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitive-words.txt");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        ) {
-            String keyword;
-            while ((keyword = reader.readLine()) != null) {
-                // 添加到前缀树
-                this.addKeyword(keyword);
-            }
-        } catch (IOException e) {
-            logger.error("加载敏感词文件失败: " + e.getMessage());
-        }
+        this.addKeyword("赌博");
+        this.addKeyword("嫖娼");
+        this.addKeyword("吸毒");
+        this.addKeyword("开票");
+//        try (
+//                InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitive-words.txt");
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+//        ) {
+//            String keyword;
+//            while ((keyword = reader.readLine()) != null) {
+//                // 添加到前缀树
+//                this.addKeyword(keyword);
+//            }
+//        } catch (IOException e) {
+//            logger.error("加载敏感词文件失败: " + e.getMessage());
+//        }
     }
 
     // 将一个敏感词添加到前缀树中
