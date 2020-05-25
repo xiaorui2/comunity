@@ -13,4 +13,6 @@ public interface DiscussPostMapper {
 
     // @Param 参数是用来给参数取别名；如果是一个动态的 sql，并且这个传入进来有且仅有一个参数，这个参数就必须取别名，
     int selectDiscussPostRows(@Param("userId") int userId);
+
+    int insertDiscussPost(DiscussPost discussPost);
 }

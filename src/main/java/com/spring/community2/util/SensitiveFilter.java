@@ -31,6 +31,10 @@ public class SensitiveFilter {
 
     @PostConstruct
     public void init() {
+//        this.addKeyword("赌博");
+//        this.addKeyword("嫖娼");
+//        this.addKeyword("吸毒");
+//        this.addKeyword("开票");
         try (
                 InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitive-words.txt");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
