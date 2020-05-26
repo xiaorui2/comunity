@@ -1,17 +1,21 @@
 package com.spring.community2.controller;
 
 import com.spring.community2.entity.DiscussPost;
+import com.spring.community2.entity.Page;
 import com.spring.community2.entity.User;
 import com.spring.community2.service.DiscussPostService;
+import com.spring.community2.service.UserService;
 import com.spring.community2.util.CommunityUtil;
 import com.spring.community2.util.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * @ClassName DiscussPostController
@@ -26,6 +30,9 @@ public class DiscussPostController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -43,5 +50,17 @@ public class DiscussPostController {
 
         // 报错的情况以后统一处理
         return CommunityUtil.getJSONString(0, "发布成功！");
+    }
+
+    @RequestMapping(path = "/detail/{discussPostId}", method = RequestMethod.GET)
+    public String getDiscussPost(@PathVariable("discussPostId") int discussPostId, Model model) {
+        // 帖子
+        DiscussPost discussPost = discussPostService.findDiscussPostById(discussPostId);
+        model.addAttribute("post", discussPost);
+        // 查帖子作者
+        User user = userService.findUserById(discussPost.getUserId());
+        model.addAttribute("user", user);
+        
+        return "/site/discuss-detail";
     }
 }
