@@ -2,6 +2,7 @@ package com.spring.community2.controller;
 
 import com.spring.community2.annotation.LoginRequired;
 import com.spring.community2.entity.User;
+import com.spring.community2.service.LikeService;
 import com.spring.community2.service.UserService;
 import com.spring.community2.util.CommunityUtil;
 import com.spring.community2.util.HostHolder;
@@ -48,6 +49,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -123,5 +127,21 @@ public class UserController {
             model.addAttribute("PasswordMsg", map.get("newPasswordMsg"));
             return "/site/setting";
         }
+    }
+
+    @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId, Model model) {
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        // 基本信息
+        model.addAttribute("user", user);
+        // 点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+
+
+        return "/site/profile";
     }
 }
