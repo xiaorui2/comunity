@@ -1,7 +1,9 @@
 package com.spring.community2.controller;
 
+import com.spring.community2.entity.Event;
 import com.spring.community2.entity.Page;
 import com.spring.community2.entity.User;
+import com.spring.community2.event.EventProducer;
 import com.spring.community2.service.FollowService;
 import com.spring.community2.service.UserService;
 import com.spring.community2.util.CommunityConstant;
@@ -34,11 +36,22 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
         User user = hostHolder.getUser();
         followService.follow(user.getId(), entityType, entityId);
+        // 触发关注事件
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId);
+        eventProducer.fireEvent(event);
         return CommunityUtil.getJSONString(0, "已关注!");
     }
 
