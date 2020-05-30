@@ -1,9 +1,7 @@
 package com.spring.community2.controller;
 
-import com.spring.community2.entity.Comment;
-import com.spring.community2.entity.DiscussPost;
-import com.spring.community2.entity.Page;
-import com.spring.community2.entity.User;
+import com.spring.community2.entity.*;
+import com.spring.community2.event.EventProducer;
 import com.spring.community2.service.CommentService;
 import com.spring.community2.service.DiscussPostService;
 import com.spring.community2.service.LikeService;
@@ -44,6 +42,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title, String content) {
@@ -57,6 +58,14 @@ public class DiscussPostController implements CommunityConstant {
         discussPost.setContent(content);
         discussPost.setCreateTime(new Date());
         discussPostService.addDiscusPost(discussPost);
+
+        // 触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(discussPost.getId());
+        eventProducer.fireEvent(event);
 
         // 报错的情况以后统一处理
         return CommunityUtil.getJSONString(0, "发布成功！");
