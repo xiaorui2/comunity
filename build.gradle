@@ -35,6 +35,7 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
 	compile group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2'
 	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
+	compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5'
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
